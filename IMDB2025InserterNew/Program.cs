@@ -23,7 +23,7 @@ namespace IMDB2025InserterNew
             //cmd.ExecuteNonQuery();
 
             //PreparedSql preparedSql = new PreparedSql(sqlConn, sqlTrans);
-            BulkSql bulkSql = new BulkSql();
+            BulkSqlTitle bulkSql = new BulkSqlTitle();
 
             Dictionary<string, int> TitleTypes = new Dictionary<string, int>();
 
@@ -46,7 +46,7 @@ namespace IMDB2025InserterNew
                     {
                         Title title = new Title
                         {
-                            Id = int.Parse(values[0].Substring(2)),
+                            TitleId = int.Parse(values[0].Substring(2)),
                             TitleType = TitleTypes[values[1]],
                             PrimaryTitle = values[2],
                             OriginalTitle = values[3] == "\\N" ? null : values[3],

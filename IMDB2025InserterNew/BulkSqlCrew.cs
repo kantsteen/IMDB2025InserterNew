@@ -16,9 +16,8 @@ namespace IMDB2025InserterNew
         {
             CrewDataTable = new DataTable();
             CrewDataTable.Columns.Add("TitleId", typeof(int));
-            CrewDataTable.Columns.Add("Directors", typeof(List<string>));
-            CrewDataTable.Columns.Add("Writers", typeof(List<string>));
-            
+            CrewDataTable.Columns.Add("Directors", typeof(string));
+            CrewDataTable.Columns.Add("Writers", typeof(string));
         }
 
         public void InsertCrew(Crew crew)
@@ -27,6 +26,7 @@ namespace IMDB2025InserterNew
             row["TitleId"] = crew.TitleId;
             row["Directors"] = crew.Directors;
             row["Writers"] = crew.Writers;
+            CrewDataTable.Rows.Add(row);
 
         }
 

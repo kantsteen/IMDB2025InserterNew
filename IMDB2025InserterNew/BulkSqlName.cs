@@ -32,6 +32,7 @@ namespace IMDB2025InserterNew
             row["DeathYear"] = name.DeathYear;
             row["PrimaryProfession"] = name.PrimaryProfession;
             row["KnownForTitles"] = name.KnownForTitles;
+            NameDataTable.Rows.Add(row);
         }
 
         public void InsertIntoDB(SqlConnection sqlConn, SqlTransaction sqlTrans)
