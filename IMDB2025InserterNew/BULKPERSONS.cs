@@ -25,7 +25,7 @@ namespace IMDB2025InserterNew
             int lineCount = 0;
             int errorCount = 0;
 
-            foreach (string line in File.ReadLines(filename).Skip(1).Take(100000))
+            foreach (string line in File.ReadLines(filename).Skip(1))
             {
                 lineCount++;
                 if (lineCount % 50000 == 0)
