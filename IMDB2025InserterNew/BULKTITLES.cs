@@ -11,7 +11,6 @@ namespace IMDB2025InserterNew
 {
     public static class BulkTitles
     {
-
         public static void ImportTitles(SqlConnection conn, string filename)
         {
             Console.WriteLine("\n=== Importing Titles ===");

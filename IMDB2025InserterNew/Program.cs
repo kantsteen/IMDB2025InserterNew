@@ -7,13 +7,39 @@ namespace IMDB2025InserterNew
     {
         static void Main(string[] args)
         {
-            string connectionString = "Server=localhost;Database=IMDBNEW;" +
-            "integrated security=True;TrustServerCertificate=True;";
 
-            string basePath = @"C:\Datamatiker_4sem\SQL Mandatory Assignment\";
+            //string connectionString = "Server=localhost;Database=IMDBNEW;" +
+            //"integrated security=True;TrustServerCertificate=True;";
+
+            string connectionString = "Server=localhost;Database=IMDBNEW;" +
+                                      "User Id=IMDBAppUser;Password=SecurePassword123!;" +
+                                      "TrustServerCertificate=True;";
+
+
+            Console.WriteLine("╔════════════════════════════════════════╗");
+            Console.WriteLine("║         IMDB Management System         ║");
+            Console.WriteLine("╚════════════════════════════════════════╝\n");
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    Console.WriteLine("DB connected successfully");
+
+                    ConsoleUI.ShowMainMenu(conn);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Couldn't connect to DB error message: {ex.Message}");
+                }
+            }
+
+            //string basePath = @"C:\Datamatiker_4sem\SQL Mandatory Assignment\";
 
             Console.WriteLine("Starting IMDB Data Import...");
             Stopwatch totalTime = Stopwatch.StartNew();
+
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -24,6 +50,12 @@ namespace IMDB2025InserterNew
 
                 Console.WriteLine($"\nTotal import time: {totalTime.Elapsed}");
             }
+
+
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+
         }
     }
 }
