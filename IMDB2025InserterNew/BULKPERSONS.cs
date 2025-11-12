@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IMDB2025InserterNew
 {
-    public static class BULKPERSONS
+    public static class BulkPersons
     {
 
         public static void ImportPersons(SqlConnection conn, string filename)
@@ -25,7 +25,7 @@ namespace IMDB2025InserterNew
             int lineCount = 0;
             int errorCount = 0;
 
-            foreach (string line in File.ReadLines(filename).Skip(1).Take(100000))
+            foreach (string line in File.ReadLines(filename).Skip(1))
             {
                 lineCount++;
                 if (lineCount % 50000 == 0)
@@ -42,7 +42,6 @@ namespace IMDB2025InserterNew
                 {
                     int personId = int.Parse(values[0].Substring(2)); // Remove "nm"
 
-                    // Add person row (truncate long names)
                     DataRow personRow = personsTable.NewRow();
                     personRow["PersonId"] = personId;
                     personRow["PrimaryName"] = values[1];
@@ -94,7 +93,6 @@ namespace IMDB2025InserterNew
                         personsTable.Clear();
                     }
 
-                    // Also batch the junction tables to prevent memory buildup
                     if (personProfessionsTable.Rows.Count >= 50000)
                     {
                         BulkInsertPersonProfessions(conn, personProfessionsTable);
@@ -118,7 +116,6 @@ namespace IMDB2025InserterNew
             if (personsTable.Rows.Count > 0)
                 BulkInsertPersons(conn, personsTable);
 
-            // Insert remaining junction table data
             if (personProfessionsTable.Rows.Count > 0)
                 BulkInsertPersonProfessions(conn, personProfessionsTable);
 
@@ -144,7 +141,7 @@ namespace IMDB2025InserterNew
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("PersonId", typeof(int));
-            dt.Columns.Add("ProfessionId", typeof(int)); // Changed from ProfessionName
+            dt.Columns.Add("ProfessionId", typeof(int));
             return dt;
         }
 
@@ -172,15 +169,12 @@ namespace IMDB2025InserterNew
             {
                 bulk.DestinationTableName = "Persons";
                 bulk.BatchSize = 5000;
-                bulk.BulkCopyTimeout = 600;
                 bulk.WriteToServer(dt);
             }
         }
 
         static void BulkInsertPersonProfessions(SqlConnection conn, DataTable dt)
         {
-            if (dt.Rows.Count == 0) return;
-
             using (SqlBulkCopy bulk = new SqlBulkCopy(conn))
             {
                 bulk.DestinationTableName = "PersonProfessions";
@@ -191,8 +185,6 @@ namespace IMDB2025InserterNew
 
         static void InsertKnownForTitles(SqlConnection conn, DataTable dt)
         {
-            if (dt.Rows.Count == 0) return;
-
             using (SqlBulkCopy bulk = new SqlBulkCopy(conn))
             {
                 bulk.DestinationTableName = "PersonKnownForTitles";

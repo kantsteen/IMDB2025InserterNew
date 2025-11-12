@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IMDB2025InserterNew
 {
-    public static class BULKCREWS
+    public static class BulkCrews
     {
         public static void ImportTitleCrew(SqlConnection conn, string filename)
         {
@@ -22,7 +22,7 @@ namespace IMDB2025InserterNew
             int lineCount = 0;
             int errorCount = 0;
 
-            foreach (string line in File.ReadLines(filename).Skip(1).Take(100000))
+            foreach (string line in File.ReadLines(filename).Skip(1))
             {
                 lineCount++;
                 if (lineCount % 100000 == 0)

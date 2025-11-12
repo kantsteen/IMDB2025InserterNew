@@ -18,9 +18,9 @@ namespace IMDB2025InserterNew
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                BULKTITLES.ImportTitles(conn, basePath + "title.basics.tsv");
-                BULKPERSONS.ImportPersons(conn, basePath + "name.basics.tsv");
-                BULKCREWS.ImportTitleCrew(conn, basePath + "title.crew.tsv");
+                BulkTitles.ImportTitles(conn, basePath + "title.basics.tsv");
+                BulkPersons.ImportPersons(conn, basePath + "name.basics.tsv");
+                BulkCrews.ImportTitleCrew(conn, basePath + "title.crew.tsv");
 
                 Console.WriteLine($"\nTotal import time: {totalTime.Elapsed}");
             }

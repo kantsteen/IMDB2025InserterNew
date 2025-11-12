@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IMDB2025InserterNew
 {
-    public static class BULKTITLES
+    public static class BulkTitles
     {
 
         public static void ImportTitles(SqlConnection conn, string filename)
@@ -17,11 +17,9 @@ namespace IMDB2025InserterNew
             Console.WriteLine("\n=== Importing Titles ===");
             Stopwatch sw = Stopwatch.StartNew();
 
-            // Dictionaries for lookup tables
             Dictionary<string, int> titleTypes = new Dictionary<string, int>();
             Dictionary<string, int> genres = new Dictionary<string, int>();
 
-            // DataTables for bulk insert
             DataTable titlesTable = CreateTitlesDataTable();
             DataTable genresTable = CreateGenresDataTable();
             DataTable titleGenresTable = CreateTitleGenresDataTable();
@@ -29,7 +27,7 @@ namespace IMDB2025InserterNew
             int lineCount = 0;
             int errorCount = 0;
 
-            foreach (string line in File.ReadLines(filename).Skip(1).Take(100000)) // Skip header
+            foreach (string line in File.ReadLines(filename).Skip(1))
             {
                 lineCount++;
                 if (lineCount % 100000 == 0)
@@ -44,7 +42,6 @@ namespace IMDB2025InserterNew
 
                 try
                 {
-                    // Parse title ID (remove "tt" prefix)
                     int titleId = int.Parse(values[0].Substring(2));
 
                     // Get or create title type
@@ -79,14 +76,13 @@ namespace IMDB2025InserterNew
                                 genreRow["Genre"] = genre;
                                 genresTable.Rows.Add(genreRow);
 
-                                // We'll get the actual ID after bulk insert
-                                genres[genre] = 0; // Placeholder
+                                genres[genre] = 0;
                             }
 
-                            // Add to junction table (we'll bulk insert this too)
+                            // Add to junction table 
                             DataRow junctionRow = titleGenresTable.NewRow();
                             junctionRow["TitleId"] = titleId;
-                            junctionRow["GenreName"] = genre; // Temporary - we'll convert to ID
+                            junctionRow["GenreName"] = genre;
                             titleGenresTable.Rows.Add(junctionRow);
                         }
                     }
@@ -101,7 +97,7 @@ namespace IMDB2025InserterNew
                 catch (Exception ex)
                 {
                     errorCount++;
-                    if (errorCount <= 10) // Only show first 10 errors
+                    if (errorCount <= 10)
                         Console.WriteLine($"Error on line {lineCount}: {ex.Message}");
                 }
             }
@@ -114,7 +110,7 @@ namespace IMDB2025InserterNew
             if (genresTable.Rows.Count > 0)
                 BulkInsertGenres(conn, genresTable);
 
-            // Now get genre IDs and insert title-genre relationships
+            // Get genre IDs and insert title-genre relationships
             LoadGenreIds(conn, genres);
             InsertTitleGenres(conn, titleGenresTable, genres);
 
@@ -149,7 +145,7 @@ namespace IMDB2025InserterNew
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("TitleId", typeof(int));
-            dt.Columns.Add("GenreName", typeof(string)); // Temporary column
+            dt.Columns.Add("GenreName", typeof(string));
             return dt;
         }
 
