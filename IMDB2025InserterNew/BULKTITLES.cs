@@ -29,7 +29,7 @@ namespace IMDB2025InserterNew
             int lineCount = 0;
             int errorCount = 0;
 
-            foreach (string line in File.ReadLines(filename).Skip(1)) // Skip header
+            foreach (string line in File.ReadLines(filename).Skip(1).Take(100000)) // Skip header
             {
                 lineCount++;
                 if (lineCount % 100000 == 0)
@@ -55,7 +55,6 @@ namespace IMDB2025InserterNew
                         titleTypes[typeStr] = typeId;
                     }
 
-                    // Add title row (truncate long titles)
                     DataRow titleRow = titlesTable.NewRow();
                     titleRow["TitleId"] = titleId;
                     titleRow["TypeId"] = titleTypes[typeStr];
